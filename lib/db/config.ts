@@ -1,18 +1,12 @@
-import oracledb from "oracledb";
+import mysql from 'mysql2/promise';
 
-// Disable external configuration providers
-oracledb.externalAuth = false;
-oracledb.configDir = undefined;
-
-// Configure Oracle client
-oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
-oracledb.autoCommit = true;
-
-// Connection pool configuration
+// Database configuration
 export const dbConfig = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  connectString: process.env.DB_CONNECTION_STRING,
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '3306'),
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'ai_class_analytics',
 };
 
 // Define types
@@ -22,10 +16,10 @@ export type QueryResult = { rows: Array<Record<string, unknown>> };
 // Define interfaces
 export interface ConnectionPool {
   getConnection(): Promise<Connection>;
-  close(drainTime: number): Promise<void>;
+  end(): Promise<void>;
 }
 
 export interface Connection {
-  execute(sql: string, params?: QueryParam[], options?: Record<string, unknown>): Promise<QueryResult>;
-  close(): Promise<void>;
+  query(sql: string, params?: QueryParam[]): Promise<[Array<Record<string, unknown>>, mysql.FieldPacket[]]>;
+  release(): void;
 } 

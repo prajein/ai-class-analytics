@@ -1,7 +1,7 @@
 import { executeQuery, initializePool, closePool } from './index';
 
 /**
- * Example of using the Oracle database
+ * Example of using the MySQL database
  */
 async function databaseExample() {
   try {
@@ -11,12 +11,12 @@ async function databaseExample() {
     // Example 1: Query all students
     console.log('\n--- All Students ---');
     const students = await executeQuery('SELECT * FROM students');
-    console.log(students);
+    console.log(students.rows);
     
     // Example 2: Query all teachers
     console.log('\n--- All Teachers ---');
     const teachers = await executeQuery('SELECT * FROM teachers');
-    console.log(teachers);
+    console.log(teachers.rows);
     
     // Example 3: Join query with parameters
     console.log('\n--- Student Scores ---');
@@ -24,9 +24,9 @@ async function databaseExample() {
       SELECT s.name, m.es_score, m.flat_score, m.dbms_score, m.mathematics_score, m.daa_score
       FROM students s
       JOIN midsem_scores m ON s.student_id = m.student_id
-      WHERE s.section = :1
+      WHERE s.section = ?
     `, ['A']);
-    console.log(scores);
+    console.log(scores.rows);
     
     // Example 4: Complex query with multiple joins
     console.log('\n--- Student Performance by Section ---');
@@ -44,7 +44,7 @@ async function databaseExample() {
       GROUP BY s.section
       ORDER BY s.section
     `);
-    console.log(performance);
+    console.log(performance.rows);
     
   } catch (error) {
     console.error('Error in database example:', error);
