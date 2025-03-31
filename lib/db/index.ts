@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import * as mysql from 'mysql2/promise';
 import { dbConfig, type QueryParam, type QueryResult, type ConnectionPool, type Connection } from './config';
 
 // Global connection pool
