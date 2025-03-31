@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeQuery } from "@/lib/db";
+import { setupDatabase } from '../setup-db';
+
+// Initialize the database when the server starts
+setupDatabase();
 
 export async function GET(request: NextRequest) {
   try {
@@ -74,5 +78,50 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching students:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}
+
+// Create a new student
+export async function POST(request: Request) {
+  try {
+    // Parse the request body
+    const { name, section, email } = await request.json();
+    
+    // Validate the input
+    if (!name || !section || !email) {
+      return NextResponse.json(
+        { success: false, error: 'Name, section, and email are required' },
+        { status: 400 }
+      );
+    }
+    
+    // Insert the new student
+    const result = executeQuery(
+      'INSERT INTO students (name, section, email) VALUES (?, ?, ?) RETURNING student_id',
+      [name, section, email]
+    );
+    
+    // Check if the insert was successful
+    if (result && result.length > 0) {
+      // Fetch the newly created student
+      const newStudent = executeQuery(
+        'SELECT * FROM students WHERE student_id = ?',
+        [result[0].student_id as number]
+      );
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Student created successfully',
+        data: newStudent[0]
+      });
+    } else {
+      throw new Error('Failed to create student');
+    }
+  } catch (error) {
+    console.error('Error creating student:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to create student' },
+      { status: 500 }
+    );
   }
 } 

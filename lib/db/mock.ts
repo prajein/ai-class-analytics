@@ -16,12 +16,9 @@ const mockData = {
   ],
 };
 
-// Define types
-export type QueryParam = string | number | boolean | null | undefined;
-export type QueryResult = { rows: Array<Record<string, unknown>> };
-
-// Mock database functions
-export async function executeQuery(query: string, params: QueryParam[] = []) {
+// Mock executeQuery function (aligned with the SQLite implementation)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function executeQuery_MOCK(query: string, _params: unknown[] = []) {
   // Simple query parsing for development
   const queryLower = query.toLowerCase();
   
@@ -37,23 +34,22 @@ export async function executeQuery(query: string, params: QueryParam[] = []) {
     return mockData.midsem_scores;
   }
   
-  // Add more mock query handlers as needed
+  // For insert/update/delete operations
+  if (queryLower.startsWith("insert") || queryLower.startsWith("update") || queryLower.startsWith("delete")) {
+    return [{ changes: 1, lastInsertRowid: 1 }];
+  }
   
+  // Default empty result
   return [];
 }
 
-// Mock connection pool functions
-export async function createPool() {
-  console.log("Mock connection pool created");
-}
+// Add mock flag to enable mocking even with SQLite
+let MOCK_ENABLED = process.env.NODE_ENV === 'test' || process.env.USE_MOCK_DB === 'true';
 
-export async function closePool() {
-  console.log("Mock connection pool closed");
-}
+// Override the actual executeQuery when mocking is enabled
+export const executeQuery = MOCK_ENABLED ? executeQuery_MOCK : undefined;
 
-export async function getConnection() {
-  return {
-    execute: executeQuery,
-    close: async () => {},
-  };
+// Toggle mocking on/off
+export function enableMocking(enable: boolean) {
+  MOCK_ENABLED = enable;
 } 
