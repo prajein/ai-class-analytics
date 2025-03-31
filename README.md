@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Class Analytics Dashboard
+
+A Next.js 15 application for visualizing AI Department Midsem Scores from an Oracle SQL database.
+
+## Features
+
+- 📊 Comprehensive analytics dashboard for midsem scores
+- 📈 Interactive charts using Recharts
+- 📑 Data tables with server-side pagination using Tanstack Table
+- 🔍 Advanced filtering and search functionality
+- 💻 Custom SQL query capabilities with validation
+- 🖥️ Beautiful UI with responsive design
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Database**: Oracle SQL
+- **UI Components**: Custom components with Tailwind CSS
+- **State Management**: Zustand
+- **Data Fetching**: Tanstack Query
+- **Visualization**: Recharts
+- **Tables**: Tanstack Table
+- **Validation**: Zod + React Hook Form
+- **Styling**: Tailwind CSS
+
+## Prerequisites
+
+- Node.js 18.17 or later
+- Oracle Database connection
+- npm or pnpm
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repository**
 
 ```bash
-npm run dev
+git clone https://github.com/yourusername/ai-class-analytics.git
+cd ai-class-analytics
+```
+
+2. **Install dependencies**
+
+```bash
+pnpm install
 # or
-yarn dev
-# or
+npm install
+```
+
+3. **Set up the environment variables**
+
+Create a `.env.local` file in the root directory and add the following:
+
+```
+DB_USER=your_db_username
+DB_PASSWORD=your_db_password
+DB_CONNECTION_STRING=your_connection_string
+```
+
+4. **Set up the database**
+
+Run the SQL script in `scripts/setup-database.sql` on your Oracle database to create the necessary tables and sample data.
+
+5. **Run the development server**
+
+```bash
 pnpm dev
 # or
-bun dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application uses the following database schema:
 
-## Learn More
+- **teachers**: Information about faculty members
+- **classes**: Different AI classes
+- **students**: Student information linked to classes
+- **subjects**: Course subjects
+- **scores**: Student midsem scores for each subject
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+ai-class-analytics/
+├── app/
+│   ├── (dashboard)/ - Dashboard pages and layout
+│   ├── api/ - API routes for data fetching
+├── components/
+│   ├── ui/ - UI components
+│   │   ├── dashboard/ - Dashboard-specific components
+│   │   ├── tables/ - Table components
+│   │   ├── forms/ - Form components
+├── lib/
+│   ├── db/ - Database utilities
+├── stores/ - Zustand state stores
+├── scripts/ - Database setup scripts
+├── types/ - TypeScript type definitions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Main Pages
 
-## Deploy on Vercel
+- **/** - Main dashboard with analytics
+- **/query** - Custom SQL query interface
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
